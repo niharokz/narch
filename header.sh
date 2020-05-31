@@ -34,12 +34,10 @@ then
         test="#       SOURCE ["$1"] LAST MODIFIED ON "`date +"%d-%m-%y"`
         sed -i "10s/.*/$test/" $1
     fi
+	mv $1.bak /data/workspace/backup
 else
     heading $1
 fi 
 
 echo "" >>$1
 vim +11 $1
-
-mv $1.bak /data/workspace/backup
-
