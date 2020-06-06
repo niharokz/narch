@@ -1,38 +1,32 @@
-# 
-#       ███╗░░██╗██╗██╗░░██╗░█████╗░██████╗░░█████╗░██╗░░██╗███████╗
-#       ████╗░██║██║██║░░██║██╔══██╗██╔══██╗██╔══██╗██║░██╔╝╚════██║
-#       ██╔██╗██║██║███████║███████║██████╔╝██║░░██║█████═╝░░░███╔═╝
-#       ██║╚████║██║██╔══██║██╔══██║██╔══██╗██║░░██║██╔═██╗░██╔══╝░░
-#       ██║░╚███║██║██║░░██║██║░░██║██║░░██║╚█████╔╝██║░╚██╗███████╗
-#       ╚═╝░░╚══╝╚═╝╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝╚══════╝
 #
-#       DRAFTED BY NIHAR SAMANTARAY On 16-05-20. [https://nihars.com]
-#       SOURCE [header.sh] LAST MODIFIED ON 31-05-20
+#		NAME		:	NIHAR SAMANTARAY
+#		WEBSITE		:	HTTPS://NIHARS.COM
+#		SOURCE		:	header.sh
+#		CREATED ON	:	04-06-20
+#		MODIFIED ON	:	06-06-20
+#
 
 heading() {
     echo "#" > $1
-    echo "#       ███╗░░██╗██╗██╗░░██╗░█████╗░██████╗░░█████╗░██╗░░██╗███████╗" >> $1
-    echo "#       ████╗░██║██║██║░░██║██╔══██╗██╔══██╗██╔══██╗██║░██╔╝╚════██║" >> $1
-    echo "#       ██╔██╗██║██║███████║███████║██████╔╝██║░░██║█████═╝░░░███╔═╝" >> $1
-    echo "#       ██║╚████║██║██╔══██║██╔══██║██╔══██╗██║░░██║██╔═██╗░██╔══╝░░" >> $1
-    echo "#       ██║░╚███║██║██║░░██║██║░░██║██║░░██║╚█████╔╝██║░╚██╗███████╗" >> $1
-    echo "#       ╚═╝░░╚══╝╚═╝╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝╚══════╝" >> $1
-    echo "#" >> $1
-    echo "#       DRAFTED BY NIHAR SAMANTARAY ON "`date +"%d-%m-%y"`"." "[https://nihars.com]" >> $1
-    echo "#       SOURCE ["$1"] LAST MODIFIED ON "`date +"%d-%m-%y"` >> $1
+	echo "#		NAME		:	NIHAR SAMANTARAY" >> $1
+	echo "#		WEBSITE		:	HTTPS://NIHARS.COM" >> $1
+	echo "#		SOURCE		:	$1" >> $1
+	echo "#		CREATED ON	:	`date +"%d-%m-%y"`" >> $1
+    echo "#		MODIFIED ON	:	`date +"%d-%m-%y"`" >> $1
 }
 
 if [ -s $1 ];
 then
-    test=`sed -n 9p $1`
+    test=`sed -n 2p $1`
     cat $1>$1.bak
-    if [ "${test:19:5}" != "NIHAR" ];
+	echo ${test:11:5}
+    if [ "${test:11:5}" != "NIHAR" ];
     then
         heading $1
         cat $1.bak >> $1
     else
-        test="#       SOURCE ["$1"] LAST MODIFIED ON "`date +"%d-%m-%y"`
-        sed -i "10s/.*/$test/" $1
+		modifiedOn="#		MODIFIED ON	:	`date +"%d-%m-%y"`"
+        sed -i "6s/.*/$modifiedOn/" $1
     fi
 	mv $1.bak /data/workspace/backup
 else
@@ -40,4 +34,10 @@ else
 fi 
 
 echo "" >>$1
-vim +11 $1
+vim +7 $1
+
+
+
+
+
+
