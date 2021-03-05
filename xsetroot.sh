@@ -47,34 +47,23 @@ dwm_networkmanager () {
     printf "%s $SEP2 "
 }
 
-dwm_alsa () {
-    VOL=$(amixer get Master | tail -n1 | sed -r "s/.*\[(.*)%\].*/\1/")
-    if [ "$IDENTIFIER" = "unicode" ]; then
-        if [ "$VOL" -eq 0 ]; then
-            printf "🔇"
-        elif [ "$VOL" -gt 0 ] && [ "$VOL" -le 33 ]; then
-            printf "🔈 %s%%$VOL"
-        elif [ "$VOL" -gt 33 ] && [ "$VOL" -le 66 ]; then
-            printf "🔉 %s%%$VOL"
-        else
-            printf "🔊 %s%%$VOL"
-        fi
-    else
-        if [ "$VOL" -eq 0 ]; then
-            printf "MUTE"
-        elif [ "$VOL" -gt 0 ] && [ "$VOL" -le 33 ]; then
-            printf "VOL %s%%$VOL"
-        elif [ "$VOL" -gt 33 ] && [ "$VOL" -le 66 ]; then
-            printf "VOL %s%%$VOL"
-        else
-            printf "VOL %s%%$VOL"
-        fi
-    fi
+dwm_vol () {
+    VOL=$(pamixer --get-volume)
+    printf "VOL : %s $VOL"
     printf "%s $SEP2 "
 }
 
 while true
 do
-    xsetroot -name "$(dwm_resources)$(dwm_battery)$(dwm_alsa)$(dwm_networkmanager)$(dwm_date)"
+    CHARGE=$(cat /sys/class/power_supply/BAT1/capacity)
+    STATUS=$(cat /sys/class/power_supply/BAT1/status)
+	XSETROOT_VALUE="$(dwm_resources)$(dwm_battery)$(dwm_vol)$(dwm_networkmanager)$(dwm_date)"
+	
+	if [ "$STATUS" == "Discharging" ] && [ "$CHARGE" -ge 10 ]
+	then
+		xsetroot -solid black -name "$XSETROOT_VALUE"
+	else
+		xsetroot -solid red -name "$XSETROOT_VALUE"
+	fi
     sleep 1
 done
