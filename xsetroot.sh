@@ -59,11 +59,11 @@ do
     STATUS=$(cat /sys/class/power_supply/BAT1/status)
 	XSETROOT_VALUE="$(dwm_resources)$(dwm_battery)$(dwm_vol)$(dwm_networkmanager)$(dwm_date)"
 	
-	if [ "$STATUS" == "Discharging" ] && [ "$CHARGE" -ge 10 ]
+	if [ "$STATUS" == "Discharging" ] && [ "$CHARGE" -le 10 ]
 	then
-		xsetroot -solid black -name "$XSETROOT_VALUE"
-	else
 		xsetroot -solid red -name "$XSETROOT_VALUE"
+	else
+		xsetroot -solid black -name "$XSETROOT_VALUE"
 	fi
     sleep 1
 done
