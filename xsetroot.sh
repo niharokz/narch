@@ -65,12 +65,12 @@ do
 		if [ "$CHARGE" -le 5 ]
 		then
 			xsetroot -solid white -name "Battery below 5. Connect to charger"
-			sleep 5
-			xsetroot -solid white -name "Backing up Dropbox files"
+			sleep 10
+			xsetroot -solid red -name "Backing up Dropbox files"
 			rclone sync $DATA/cloud/dropbox dropbox: 
-			sleep 5
+			sleep 10
 			xsetroot -solid white -name "Dropbox backed up"
-			sleep 5
+			sleep 10
 			xsetroot -solid red -name "Shutting down in a minute"
 			sleep 30
 			poweroff
