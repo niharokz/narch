@@ -23,4 +23,3 @@ case "$1" in
 	s*) rclone -P sync $DATA/cloud/dropbox/notes dropbox:/notes ;;
 	*)	printf "note.sh by niharokz \\nUsage:\\n  note.sh n:\\tnew note\\n  note.sh l:\\tlist all notes\\n  note.sh o:\\topen note\\n  note.sh d:\\tdelete note\\n  note.sh s:\\tsync with dropbox\\n" ;;
 esac	
-
