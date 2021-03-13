@@ -17,12 +17,3 @@ read wifi_name
 echo WIFI password
 read wifi_pass
 nmcli device wifi connect $wifi_name password $wifi_pass 
-
-
-
-
-
-
-
-
-
