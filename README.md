@@ -1,19 +1,19 @@
-#NARCH: Collection of various command line tools
+# NARCH: Collection of various command line tools
 
-##header.sh
+## header.sh
 Include custom header in any .sh file.
 
-##cpoweroff
+## cpoweroff
 Poweroff system after backing up data.
 
-##note.sh
+## note.sh
 Markdown based note taking app.
 
-##xsetroot.sh
+## xsetroot.sh
 Custom bar for dwm.
 
-##wifi.sh
+## wifi.sh
 Wifi viewer and selecter via nmcli
 
-##todo.txt
+## todo.txt
 Todo.txt with customization
