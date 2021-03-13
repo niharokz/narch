@@ -1,4 +1,6 @@
-# 
+#!/bin/bash
+
+#
 #       ███╗░░██╗██╗██╗░░██╗░█████╗░██████╗░░█████╗░██╗░░██╗███████╗
 #       ████╗░██║██║██║░░██║██╔══██╗██╔══██╗██╔══██╗██║░██╔╝╚════██║
 #       ██╔██╗██║██║███████║███████║██████╔╝██║░░██║█████═╝░░░███╔═╝
@@ -7,10 +9,14 @@
 #       ╚═╝░░╚══╝╚═╝╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝╚══════╝
 #
 #       DRAFTED BY NIHAR SAMANTARAY On 16-05-20. [https://nihars.com]
-#       SOURCE [header.sh] LAST MODIFIED ON 10-10-20
+#       SOURCE [header.sh] LAST MODIFIED ON 13-03-21
+
+export BACKUP_DIR="$HOME/workspace/backup"
 
 heading() {
-    echo "#" > $1
+	echo "#!/bin/bash" > $1
+	echo "" >> $1
+    echo "#" >> $1
     echo "#       ███╗░░██╗██╗██╗░░██╗░█████╗░██████╗░░█████╗░██╗░░██╗███████╗" >> $1
     echo "#       ████╗░██║██║██║░░██║██╔══██╗██╔══██╗██╔══██╗██║░██╔╝╚════██║" >> $1
     echo "#       ██╔██╗██║██║███████║███████║██████╔╝██║░░██║█████═╝░░░███╔═╝" >> $1
@@ -24,7 +30,7 @@ heading() {
 
 if [ -s $1 ];
 then
-    test=`sed -n 9p $1`
+    test=`sed -n 11p $1`
     cat $1>$1.bak
     if [ "${test:19:5}" != "NIHAR" ];
     then
@@ -32,13 +38,12 @@ then
         cat $1.bak >> $1
     else
         test="#       SOURCE ["$1"] LAST MODIFIED ON "`date +"%d-%m-%y"`
-        sed -i "10s/.*/$test/" $1
+        sed -i "12s/.*/$test/" $1
     fi
-	mv $1.bak /data/workspace/backup
+	mv $1.bak $BACKUP_DIR
 else
     heading $1
 fi 
 
 echo "" >>$1
-nvim +11 $1
-
+nvim +13 $1
