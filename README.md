@@ -17,3 +17,6 @@ Wifi viewer and selecter via nmcli
 
 ## todo.txt
 Todo.txt with customization
+
+## one_piece.sh
+I like to keep my anime collection organized. This script will take all downloaded file and sort like 'one_piece_xxxx.mkv'.
