@@ -15,6 +15,6 @@ nmcli device wifi list
 echo WIFI NAME
 read wifi_name
 echo WIFI password
-read wifi_pass
+read -s wifi_pass
 nmcli device wifi connect $wifi_name password $wifi_pass 
 
