@@ -8,7 +8,7 @@
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
 #       DRAFTED BY [https://nihar.page] ON 10-04-2021
-#       SOURCE [header.sh] LAST MODIFIED ON 17-04-21.
+#       SOURCE [header.sh] LAST MODIFIED ON 27-06-2021.
 #
 
 export BACKUP_DIR="$HOME/workspace/backup"
@@ -43,7 +43,7 @@ then
         heading $1
         cat $1.bak >> $1
     else
-        test="#       SOURCE ["$1"] LAST MODIFIED ON "`date +"%d-%m-%y"`"."
+        test="#       SOURCE ["$1"] LAST MODIFIED ON "`date +"%d-%m-%Y"`"."
         sed -i "11s/.*/$test/" $1
     fi
 	mv $1.bak $BACKUP_DIR
@@ -53,23 +53,5 @@ fi
 
 echo "" >>$1
 $EDITOR +13 $1
-
-
-#       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
-#       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
-#       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
-#       DRAFTED BY [https://nihars.com] ON 17-04-21.
-#       SOURCE [header.sh] LAST MODIFIED ON 17-04-21.
-#       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
-#       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
-#       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
-#       DRAFTED BY [https://nihars.com] ON 17-04-21.
-#       SOURCE [header.sh] LAST MODIFIED ON 17-04-21.
-
-
-
-
-
-
 
 
