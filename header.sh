@@ -11,7 +11,7 @@
 #       SOURCE [header.sh] LAST MODIFIED ON 27-06-2021.
 #
 
-export BACKUP_DIR="$HOME/workspace/backup"
+BACKUP="$DATA/backup"
 website="https://nihar.page"
 
 if [ "${1##*.}" == "py" ]
@@ -46,12 +46,10 @@ then
         test="#       SOURCE ["$1"] LAST MODIFIED ON "`date +"%d-%m-%Y"`"."
         sed -i "11s/.*/$test/" $1
     fi
-	mv $1.bak $BACKUP_DIR
+    mv $1.bak $BACKUP
 else
     heading $1
 fi 
 
 echo "" >>$1
 $EDITOR +13 $1
-
-
