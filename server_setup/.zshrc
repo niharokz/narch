@@ -113,13 +113,13 @@ source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/nul
 
 alias v='sudo nvim'
 alias vi='sudo nvim'
-alias r='mv -t /tmp ' 
+alias r='sudo mv -t /tmp ' 
 alias nf='neofetch'
 alias l='exa -lar'
 alias c='clear'
 alias s='sudo'
 alias ss='sudo systemctl'
-alias update='sudo apt-get update && apt-get upgrade && apt-get dist-upgrade'
+alias update='sudo apt-get update && sudo apt-get upgrade && sudo apt-get dist-upgrade'
 alias pyenv='source /home/nhr/pyenv/bin/activate'
 
 ### ARCHIVE EXTRACTION

@@ -8,7 +8,7 @@
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
 #       DRAFTED BY [https://nihar.page] ON 13-03-2021.
-#       SOURCE [note.sh] LAST MODIFIED ON 21-04-2021.
+#       SOURCE [note.sh] LAST MODIFIED ON 04-07-2021.
 #
 
 export NOTE_DIR="$DATA/cloud/dropbox/notes"
@@ -23,4 +23,5 @@ case "$1" in
 	s*) rclone -P sync $DATA/cloud/dropbox/notes dropbox:/notes ;;
 	*)	printf "note.sh by niharokz \\nUsage:\\n  note.sh n:\\tnew note\\n  note.sh l:\\tlist all notes\\n  note.sh o:\\topen note\\n  note.sh d:\\tdelete note\\n  note.sh s:\\tsync with dropbox\\n" ;;
 esac	
+
 
