@@ -23,3 +23,9 @@ I like to keep my anime collection organized. This script will take all download
 
 ## server setup
 Script to initialize ubuntu 21.04+ servers with basic settings including nginx
+
+## gem.sh
+Minimal Gemini client.
+```
+./gem.sh nihar.page index.gmi
+```
