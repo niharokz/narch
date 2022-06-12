@@ -7,10 +7,11 @@
 #       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
-#       DRAFTED BY [https://nihar.page] ON 13-03-2021.
-#       SOURCE [cpoweroff] LAST MODIFIED ON 02-07-2021.
+#       DRAFTED BY [https://nihars.com] ON 13-03-2021.
+#       SOURCE [cpoweroff] LAST MODIFIED ON 12-06-2022.
 #
 
 rclone sync $DATA/cloud/dropbox dropbox: 
 poweroff
+
 

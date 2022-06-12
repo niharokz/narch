@@ -7,12 +7,12 @@
 #       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
-#       DRAFTED BY [https://nihar.page] ON 10-04-2021
-#       SOURCE [header.sh] LAST MODIFIED ON 27-06-2021.
+#       DRAFTED BY [https://nihars.com] ON 10-04-2021
+#       SOURCE [header.sh] LAST MODIFIED ON 12-06-2022.
 #
 
 BACKUP="$DATA/backup"
-website="https://nihar.page"
+website="https://nihars.com"
 
 if [ "${1##*.}" == "py" ]
  then cbang="#!/bin/python3"
@@ -53,3 +53,4 @@ fi
 
 echo "" >>$1
 $EDITOR +13 $1
+

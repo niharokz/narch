@@ -7,8 +7,8 @@
 #       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
-#       DRAFTED BY [https://nihar.page] ON 11-05-2021.
-#       SOURCE [setup.sh] LAST MODIFIED ON 04-07-2021.
+#       DRAFTED BY [https://nihars.com] ON 11-05-2021.
+#       SOURCE [server_setup.sh] LAST MODIFIED ON 12-06-2022.
 #
 
 echo "Automated Server Setup Script"
@@ -81,3 +81,4 @@ echo "restarted all service"
 sleep 5
 
 sudo zsh
+

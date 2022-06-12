@@ -7,8 +7,8 @@
 "       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
 "       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 "       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
-"       DRAFTED BY [https://nihar.page] ON 10-04-2021.
-#       SOURCE [init.vim] LAST MODIFIED ON 06-07-2021.
+"       DRAFTED BY [https://nihars.com] ON 10-04-2021.
+#       SOURCE [init.vim] LAST MODIFIED ON 12-06-2022.
 "
 
 " GENERAL
@@ -103,6 +103,7 @@ noremap <silent> <C-Left> :vertical resize +3<CR>
 noremap <silent> <C-Right> :vertical resize -3<CR>
 noremap <silent> <C-Up> :resize +3<CR>
 noremap <silent> <C-Down> :resize -3<CR>
+
 
 
 
