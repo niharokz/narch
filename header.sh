@@ -7,12 +7,12 @@
 #       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
-#       DRAFTED BY [https://nihars.com] ON 10-04-2021
-#       SOURCE [header.sh] LAST MODIFIED ON 12-06-2022.
+#       DRAFTED BY [https://nih.ar] ON 10-04-2021
+#       SOURCE [header.sh] LAST MODIFIED ON 23-10-2022.
 #
 
 BACKUP="$DATA/backup"
-website="https://nihars.com"
+website="https://nih.ar"
 
 if [ "${1##*.}" == "py" ]
  then cbang="#!/bin/python3"
@@ -38,7 +38,7 @@ if [ -s $1 ];
 then
     test=`sed -n 10p $1`
     cat $1>$1.bak
-    if [ "${test:20:18}" != "$website" ];
+    if [ "${test:20:14}" != "$website" ];
     then
         heading $1
         cat $1.bak >> $1
@@ -53,4 +53,5 @@ fi
 
 echo "" >>$1
 $EDITOR +13 $1
+
 

@@ -7,8 +7,8 @@
 #       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
-#       DRAFTED BY [https://nihars.com] ON 10-11-2020.
-#       SOURCE [wifi.sh] LAST MODIFIED ON 12-06-2022.
+#       DRAFTED BY [https://nih.ar] ON 10-11-2020.
+#       SOURCE [wifi.sh] LAST MODIFIED ON 23-10-2022.
 #
 
 nmcli device wifi list
@@ -17,4 +17,5 @@ read wifi_name
 echo WIFI password
 read -s wifi_pass
 nmcli device wifi connect $wifi_name password $wifi_pass 
+
 

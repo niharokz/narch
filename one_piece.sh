@@ -7,8 +7,8 @@
 #       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
-#       DRAFTED BY [https://nihar.page] ON 14-03-21.
-#       SOURCE [one_piece.sh] LAST MODIFIED ON 18-04-21.
+#       DRAFTED BY [https://nih.ar] ON 14-03-21.
+#       SOURCE [one_piece.sh] LAST MODIFIED ON 23-10-2022.
 #
 
 [ ! -d movie ] && mkdir -p movie
@@ -28,4 +28,5 @@ do
 		mv "$file" movie
 	fi
 done
+
 
