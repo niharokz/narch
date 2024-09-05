@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 
 #
 #       ███╗   ██╗██╗██╗  ██╗ █████╗ ██████╗ ███████╗
@@ -7,8 +7,8 @@
 #       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
-#       DRAFTED BY [https://nihars.com] ON 20-10-2020.
-#       SOURCE [.zshrc] LAST MODIFIED ON 04-07-2021.
+#       DRAFTED BY [https://nih.ar] ON 30-10-2020.
+#       SOURCE [.zshrc] LAST MODIFIED ON 18-02-2024.
 #
 
 autoload -U colors && colors	# Load colors
@@ -28,7 +28,15 @@ stty stop undef		# Disable ctrl-s to freeze terminal.
 # History in cache directory:
 HISTSIZE=1000
 SAVEHIST=1000
-HISTFILE=~/.config/history
+HISTFILE=~/.cache/zsh/history
+
+# Load aliases and shortcuts if existent.
+[[ $- != *i* ]] && return    
+. $XDG_CONFIG_HOME/.alias    
+    
+if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then     
+    exec startx "$XDG_CONFIG_HOME/X11/xinitrc";    
+fi 
 
 # Auto complete with case insenstivity
 zstyle ':completion:*' auto-description 'specify: %d'
@@ -108,46 +116,11 @@ autoload edit-command-line; zle -N edit-command-line
 bindkey '^e' edit-command-line
 
 # Load zsh-syntax-highlighting
-source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
-source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
+source /usr/share/zsh/plugins/zsh-you-should-use/you-should-use.plugin.zsh 2>/dev/null
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
+source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh 2>/dev/null
 
-alias v='sudo nvim'
-alias vi='sudo nvim'
-alias r='sudo mv -t /tmp ' 
-alias nf='neofetch'
-alias l='exa -lar'
-alias c='clear'
-alias s='sudo'
-alias ss='sudo systemctl'
-alias update='sudo apt-get update && sudo apt-get upgrade && sudo apt-get dist-upgrade'
-alias pyenv='source /home/nhr/pyenv/bin/activate'
-
-### ARCHIVE EXTRACTION
-# usage: ex <file>
-ex ()
-{
-  if [ -f $1 ] ; then
-    case $1 in
-      *.tar.bz2)   tar xjf $1   ;;
-      *.tar.gz)    tar xzf $1   ;;
-      *.bz2)       bunzip2 $1   ;;
-      *.rar)       unrar x $1   ;;
-      *.gz)        gunzip $1    ;;
-      *.tar)       tar xf $1    ;;
-      *.tbz2)      tar xjf $1   ;;
-      *.tgz)       tar xzf $1   ;;
-      *.zip)       unzip $1     ;;
-      *.Z)         uncompress $1;;
-      *.7z)        7z x $1      ;;
-      *.deb)       ar x $1      ;;
-      *.tar.xz)    tar xf $1    ;;
-      *.tar.zst)   unzstd $1    ;;      
-      *)           echo "'$1' cannot be extracted via ex()" ;;
-    esac
-  else
-    echo "'$1' is not a valid file"
-  fi
-}
-
+#gpgconf --launch gpg-agent
 neofetch
 
