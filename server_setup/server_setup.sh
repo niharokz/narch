@@ -38,7 +38,7 @@ echo "dist upgrade done"
 echo "installing software"
 sleep 5
 
-apt-get install sudo zsh neovim exa zsh-syntax-highlighting zsh-autosuggestions python3-venv python3-pip neofetch git nginx certbot python3-certbot-nginx -y
+apt-get install sudo zsh neovim exa bat zsh-syntax-highlighting zsh-autosuggestions python3-venv python3-pip neofetch git nginx certbot python3-certbot-nginx -y
 echo "software installed"
 echo "creating directories and moving files"
 sleep 5
