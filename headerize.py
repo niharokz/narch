@@ -8,7 +8,7 @@
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
 #       DRAFTED BY [https://nih.ar] ON 01-06-2025
-#       SOURCE [headerize.py] LAST MODIFIED ON 01-06-2025
+#       SOURCE [headerize.py] LAST MODIFIED ON 19-01-2026
 #
 
 import sys
