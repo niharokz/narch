@@ -1,0 +1,399 @@
+package main
+
+import (
+    "fmt"
+    "os"
+    "os/exec"
+    "path/filepath"
+    "strings"
+    "time"
+
+    "gopkg.in/yaml.v3"
+)
+
+type DockerComposeConfig struct {
+	Enabled            bool   `yaml:"enabled"`
+	BasePath           string `yaml:"base_path"`
+	UpdateIntervalDays int    `yaml:"update_interval_days"`
+}
+
+type Config struct {
+	Log struct {
+		Dir    string `yaml:"dir"`
+		Prefix string `yaml:"prefix"`
+	} `yaml:"log"`
+
+	System struct {
+		ShowStats bool `yaml:"show_stats"`
+	} `yaml:"system"`
+
+	Tailscale struct {
+		Enabled   bool   `yaml:"enabled"`
+		UpCommand string `yaml:"up_command"`
+	} `yaml:"tailscale"`
+
+	Docker struct {
+		Enabled           bool                `yaml:"enabled"`
+		RestartContainers []string            `yaml:"restart_containers"`
+		Compose           DockerComposeConfig `yaml:"compose"`
+	} `yaml:"docker"`
+
+	Git struct {
+		Paths []string `yaml:"paths"`
+	} `yaml:"git"`
+
+	Build struct {
+		Paths []string `yaml:"paths"`
+	} `yaml:"build"`
+
+	Backup struct {
+		Source     string   `yaml:"source"`
+		Target     string   `yaml:"target"`
+		Extensions []string `yaml:"extensions"`
+	} `yaml:"backup"`
+
+	CustomCommands []struct {
+		Name string `yaml:"name"`
+		Cmd  string `yaml:"cmd"`
+	} `yaml:"custom_commands"`
+}
+
+var telegramBuffer []string
+var logFile *os.File
+
+func main() {
+        cfg := loadConfig(getConfigPath())
+	initLogger(cfg)
+        loadSecrets()
+
+	header()
+
+	if cfg.System.ShowStats {
+		systemStats()
+	}
+
+	checkUpdates()
+	handleTailscale(cfg)
+	handleDocker(cfg)
+        handleDockerCompose(cfg)
+	handleGit(cfg)
+	handleBuild(cfg)
+	handleBackup(cfg)
+	handleCustom(cfg)
+
+	footer()
+
+        sendTelegram(strings.Join(telegramBuffer, "\n"))
+}
+
+func getConfigPath() string {
+	if _, err := os.Stat("config.yaml"); err == nil {
+		return "config.yaml"
+	}
+	exe, _ := os.Executable()
+	dir := filepath.Dir(exe)
+	return filepath.Join(dir, "config.yaml")
+}
+
+func loadConfig(path string) Config {
+	var cfg Config
+	data, _ := os.ReadFile(path)
+	yaml.Unmarshal(data, &cfg)
+	return cfg
+}
+
+func initLogger(cfg Config) {
+	now := time.Now()
+	file := fmt.Sprintf("%s_%d%02d.log", cfg.Log.Prefix, now.Year(), now.Month())
+	fullPath := filepath.Join(cfg.Log.Dir, file)
+
+	os.MkdirAll(cfg.Log.Dir, 0755)
+
+        f, err := os.OpenFile(fullPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+        if err != nil {
+	    fmt.Println("LOG ERROR:", err)
+	    os.Exit(1)
+        }
+	logFile = f
+}
+
+func loadSecrets() {
+    home, err := os.UserHomeDir()
+    if err != nil {
+        fmt.Println("HOME ERROR:", err)
+        return
+    }
+
+    path := filepath.Join(home, ".config", ".secrets")
+
+    data, err := os.ReadFile(path)
+    if err != nil {
+        fmt.Println("SECRET READ ERROR:", err)
+        return
+    }
+
+    lines := strings.Split(string(data), "\n")
+
+    for _, line := range lines {
+        line = strings.TrimSpace(line)
+
+        if line == "" || strings.HasPrefix(line, "#") {
+            continue
+        }
+
+        if strings.HasPrefix(line, "export ") {
+            line = strings.TrimPrefix(line, "export ")
+        }
+
+        parts := strings.SplitN(line, "=", 2)
+        if len(parts) != 2 {
+            continue
+        }
+
+        key := strings.TrimSpace(parts[0])
+        val := strings.Trim(strings.TrimSpace(parts[1]), `"'`)
+
+        os.Setenv(key, val)
+    }
+}
+
+func logln(s string) {
+	fmt.Println(s)
+	logFile.WriteString(s + "\n")
+        telegramBuffer = append(telegramBuffer, s)
+}
+
+func sendTelegram(msg string) {
+    token := os.Getenv("TELEGRAM_BOT_TOKEN")
+    chat := os.Getenv("TELEGRAM_CHAT_ID")
+
+    url := fmt.Sprintf(
+        "https://api.telegram.org/bot%s/sendMessage",
+        token,
+    )
+
+    exec.Command(
+        "curl",
+        "-s",
+        "-X", "POST",
+        url,
+        "-d", "chat_id="+chat,
+        "--data-urlencode", "text="+msg,
+    ).Run()
+}
+
+func run(cmd string) string {
+	out, _ := exec.Command("bash", "-c", cmd).CombinedOutput()
+	return string(out)
+}
+
+func header() {
+	host, _ := os.Hostname()
+	now := time.Now().Format("2006-01-02 15:04:05")
+
+        logln("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        logln(fmt.Sprintf("🤖 %s | 🕒 %s", strings.ToUpper(host), now))
+	logln("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+}
+
+func lineprint() {
+        logln("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+}
+
+func footer() {
+	now := time.Now()
+	ts := now.Format("2006-01-02 15:04:05")
+	month := now.Format("2006-01")
+	cmd := fmt.Sprintf(`/usr/bin/vnstat -m | awk '/%s/ {print $8 " " $9}'`, month)
+	idata := strings.TrimSpace(run(cmd))
+	if idata == "" {
+		idata = "N/A"
+	}
+
+        logln(fmt.Sprintf("📡 %s used till now",idata))
+        logln("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        logln(fmt.Sprintf("⚓ FINISHED | 🕒 %s", ts))
+	logln("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
+}
+    
+func systemStats() {
+	cpu := strings.TrimSpace(run("top -bn1 | grep 'Cpu(s)' | awk '{print $2}'"))
+	mem := strings.TrimSpace(run("free | grep Mem | awk '{print $3/$2 * 100.0}'"))
+	disk := strings.TrimSpace(run("df / | tail -1 | awk '{print $5}'"))
+	uptime := strings.TrimSpace(run("uptime -p"))
+
+        logln("🖥️ SYSTEM")
+        logln(fmt.Sprintf("   ⚡ CPU   : %s%%", cpu))
+        logln(fmt.Sprintf("   🧠 MEM   : %s%%", mem))
+        logln(fmt.Sprintf("   💾 DISK  : %s", disk))
+        logln(fmt.Sprintf("   ⏳ UPTIME: %s", uptime))
+        lineprint()
+}
+
+func checkUpdates() {
+	out := run("apt list --upgradable 2>/dev/null | grep -v Listing")
+	if out == "" {
+		return
+	}
+	logln("📦 Updates available")
+	run("apt update && apt upgrade -y")
+	logln("✅ System updated\n")
+}
+
+func handleTailscale(cfg Config) {
+	if !cfg.Tailscale.Enabled {
+		return
+	}
+
+        logln("🔐  TAILSCALE")
+	out := run("tailscale status")
+
+	if strings.Contains(out, "stopped") || out == "" {
+		run(cfg.Tailscale.UpCommand)
+                logln(fmt.Sprintf("   🔄 Tailscale started"))
+	} else {
+                logln(fmt.Sprintf("   ✅ Connected"))
+	}
+        lineprint()
+}
+
+func handleDocker(cfg Config) {
+	if !cfg.Docker.Enabled {
+		return
+	}
+
+	logln("🐳  DOCKER")
+
+	stopped := run(`docker ps -a --filter "status=exited" --format "{{.Names}}"`)
+	if stopped != "" {
+		for _, c := range strings.Split(stopped, "\n") {
+			if c == "" {
+				continue
+			}
+			run("docker start " + c)
+                        logln(fmt.Sprintf("   ✅ Started %s", c))
+		}
+	}
+
+	for _, c := range cfg.Docker.RestartContainers {
+		run("docker restart " + c)
+                logln(fmt.Sprintf("   🔄 Restarted %s", c))
+	}
+
+	dry := run("docker image prune -a --dry-run")
+	if strings.Contains(dry, "0B") {
+                logln(fmt.Sprintf("   ✅ Nothing to prune"))
+	} else {
+		run("docker image prune -a -f")
+                logln(fmt.Sprintf("   🧹 Cleaned images"))
+	}
+        lineprint()
+}
+
+func handleDockerCompose(cfg Config) {
+	if !cfg.Docker.Compose.Enabled {
+		return
+	}
+
+	logln("📦  COMPOSE")
+
+	lastRunFile := "/tmp/nimoryd_docker_update"
+
+	// check last run
+	if data, err := os.ReadFile(lastRunFile); err == nil {
+		lastRun, _ := time.Parse(time.RFC3339, string(data))
+		if time.Since(lastRun).Hours() < float64(cfg.Docker.Compose.UpdateIntervalDays*24) {
+                        logln(fmt.Sprintf("   ⏪ Skipped"))
+                        lineprint()
+			return
+		}
+	}
+
+	dirs, _ := os.ReadDir(cfg.Docker.Compose.BasePath)
+
+	for _, d := range dirs {
+		if !d.IsDir() {
+			continue
+		}
+
+		path := filepath.Join(cfg.Docker.Compose.BasePath, d.Name())
+
+		// check if compose file exists
+		if _, err := os.Stat(filepath.Join(path, "docker-compose.yml")); err != nil {
+			if _, err := os.Stat(filepath.Join(path, "compose.yaml")); err != nil {
+				continue
+			}
+		}
+
+                logln(fmt.Sprintf("   🔍 Checking %s", d.Name()))
+
+		pull := run("cd " + path + " && docker compose pull")
+
+		if strings.Contains(pull, "Downloaded") || strings.Contains(pull, "Pull complete") {
+                        logln(fmt.Sprintf("   ⬇️  Updates found"))
+
+			up := run("cd " + path + " && docker compose up -d")
+                        logln(fmt.Sprintf("   🔄 Updated %s", d.Name()))
+
+			// optionally log output
+			logln("    " + strings.TrimSpace(up))
+		} else {
+                        logln(fmt.Sprintf("   ✅ Up-to-date"))
+		}
+	}
+
+	// update timestamp
+	os.WriteFile(lastRunFile, []byte(time.Now().Format(time.RFC3339)), 0644)
+	lineprint()
+}
+
+func handleGit(cfg Config) {
+	logln("📂  GIT")
+	for _, p := range cfg.Git.Paths {
+		run("git -C " + p + " pull")
+                logln(fmt.Sprintf("   ✅ %s", p))
+	}
+	lineprint()
+}
+
+func handleBuild(cfg Config) {
+	logln("⚙️  BUILD")
+	for _, p := range cfg.Build.Paths {
+		run("cd " + p + " && ./buildgo.sh")
+                logln(fmt.Sprintf("   ✅ %s", p))
+	}
+	lineprint()
+}
+
+func handleBackup(cfg Config) {
+	logln("📦  BACKUP")
+
+	os.MkdirAll(cfg.Backup.Target, 0755)
+
+	files, _ := os.ReadDir(cfg.Backup.Source)
+	count := 0
+
+	for _, f := range files {
+		name := f.Name()
+		for _, ext := range cfg.Backup.Extensions {
+			if strings.HasSuffix(name, ext) {
+				src := filepath.Join(cfg.Backup.Source, name)
+				dst := filepath.Join(cfg.Backup.Target, name)
+				os.Rename(src, dst)
+				count++
+			}
+		}
+	}
+
+	logln(fmt.Sprintf("   ✅ Moved %d files", count))
+        lineprint()
+}
+
+func handleCustom(cfg Config) {
+	logln("🔧  COMMAND")
+	for _, c := range cfg.CustomCommands {
+                logln(fmt.Sprintf("   ✅ %s", c.Name))
+		run(c.Cmd)
+	}
+        lineprint()
+}

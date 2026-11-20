@@ -51,6 +51,7 @@ DISK_INFO=$(df -h / | awk 'NR==2 {print $3"B/"$2"B ("$5")"}')
 FLATPAK_PKGS=$(flatpak list 2>/dev/null | wc -l || echo "0")
 PIP_PKGS=$(pip list --format=freeze 2>/dev/null | wc -l || echo "0")
 CARGO_PKGS=$(cargo install --list 2>/dev/null | grep -v '^ ' | wc -l || echo "0")
+DATA_USAGE=$(vnstat -m | awk -v m=$(date +%Y-%m) '$1==m {print $8, $9}')
 
 # Check for system updates
 if command -v apt &> /dev/null; then
@@ -108,7 +109,7 @@ echo -e "\033[1;32m  \`Y\$\$                        \033[1;36mMemory:\033[0m $ME
 echo -e "\033[1;32m   \`Y\$\$.                      \033[1;36mDisk:\033[0m $DISK_INFO"
 echo -e "\033[1;32m     \`\$\$b.                    \033[1;36mFlatpak:\033[0m $FLATPAK_PKGS"
 echo -e "\033[1;32m       \`Y\$\$b.                 \033[1;36mPip:\033[0m $PIP_PKGS"
-echo -e "\033[1;32m          \`\"Y\$b._             \033[1;36mCargo:\033[0m $CARGO_PKGS"
+echo -e "\033[1;32m          \`\"Y\$b._             \033[1;36mUsage:\033[0m $DATA_USAGE"
 echo -e "\033[1;32m              \`\"\"\"\"           \033[1;36mUpdates:\033[0m $UPDATE_INFO"
 echo
 echo -e "\033[1;35m$RANDOM_QUOTE\033[0m"
